@@ -4,7 +4,38 @@ import { Loader, Card, FormField, CardsList } from '../components'
 export default function Home() {
     const [loading, setLoading] = useState(false)
     const [allPosts, setAllPosts] = useState(null)
-    const [SearchText, setSearchText] = useState('')
+    const [searchText, setSearchText] = useState(null)
+
+
+    useEffect(() => {
+        loadPosts()
+    }, [])
+
+    async function loadPosts() {
+        setLoading(true)
+        try {
+            const res = await fetch('http://localhost:3030/api/v1/post', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+            })
+
+            if (res.ok) {
+                const result = await res.json()
+                setAllPosts(result.data.reverse())
+
+            }
+            
+        } catch (err) {
+            ///showmsg
+            console.log(err)
+        } finally {
+            setLoading(false)
+        }
+
+    }
+
 
     return (
         <section className="max-w-7xl mx-auto">
@@ -24,20 +55,20 @@ export default function Home() {
                     </div>
                 ) : (
                     <>
-                        {SearchText && (
+                        {searchText && (
                             <h2 className=" font-medium text-[#666e75] text-xl mb-3">
-                                Showing results for <span className="text-[222328]">{SearchText}</span>
+                                Showing results for <span className="text-[222328]">{searchText}</span>
                             </h2>
                         )}
 
                         <div className="grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3">
-                            {SearchText ? (
+                            {searchText ? (
                                 // <CardsList data='searchedResults' title="No search results found"/>
-                                <CardsList data={[]} title="No search results found"/>
+                                <CardsList data={[]} title="No search results found" />
                             ) : (
                                 // <CardsList data='allPosts' title="No Posts found" />
-                                <CardsList data={[]} title="No Posts found" />
-                            ) }
+                                <CardsList data={allPosts} title="No Posts found" />
+                            )}
 
 
                         </div>

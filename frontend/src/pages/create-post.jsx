@@ -15,8 +15,29 @@ export default function CreatePost() {
         photo: '',
     })
 
-    function handleSumbit() {
-
+    async function handleSumbit(ev) {
+        ev.preventDefault()
+        if (form.prompt && form.photo) {
+            setLoading(true)
+            try {
+                const res = await fetch("http://localhost:3030/api/v1/post", {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(form)
+                })
+                await res.json()
+                navigate('/')
+            } catch (err) {
+                //showmsg
+                alert(err)
+            } finally {
+                setLoading(false)
+            }
+        } else {
+            //showmsg for entring prompt or name
+        }
     }
 
     function handleChange({ target }) {

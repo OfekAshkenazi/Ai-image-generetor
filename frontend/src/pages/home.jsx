@@ -4,8 +4,9 @@ import { Loader, Card, FormField, CardsList } from '../components'
 export default function Home() {
     const [loading, setLoading] = useState(false)
     const [allPosts, setAllPosts] = useState(null)
-    const [searchText, setSearchText] = useState(null)
-
+    const [searchText, setSearchText] = useState('')
+    const [searchResults, setSearchResults] = useState(null)
+    const [searchTimeout, setSearchTimeout] = useState(null)
 
     useEffect(() => {
         loadPosts()
@@ -26,7 +27,7 @@ export default function Home() {
                 setAllPosts(result.data.reverse())
 
             }
-            
+
         } catch (err) {
             ///showmsg
             console.log(err)
@@ -36,6 +37,21 @@ export default function Home() {
 
     }
 
+    function handleSearchChange(ev) {
+        clearTimeout(searchTimeout)
+
+        setSearchText(ev.target.value)
+        //debounce
+        setSearchTimeout(
+
+            setTimeout(() => {
+                const searchRes = allPosts.filter((post) => post.name.toLowerCase().includes(searchText.toLowerCase()) || post.prompt.toLowerCase().includes(searchText.toLowerCase()))
+
+                setSearchResults(searchRes)
+
+            }, 500)
+        )
+    }
 
     return (
         <section className="max-w-7xl mx-auto">
@@ -45,7 +61,7 @@ export default function Home() {
             </div>
 
             <div className="mt-16">
-                <FormField />
+                <FormField labelName="search posts" type="text" name="text" placeholder="Search posts" value={searchText} handleChange={handleSearchChange}/>
             </div>
 
             <div className="mt-10">
@@ -63,10 +79,8 @@ export default function Home() {
 
                         <div className="grid lg:grid-cols-4 sm:grid-cols-3 xs:grid-cols-2 grid-cols-1 gap-3">
                             {searchText ? (
-                                // <CardsList data='searchedResults' title="No search results found"/>
-                                <CardsList data={[]} title="No search results found" />
+                                <CardsList data={searchResults} title="No search results found" />
                             ) : (
-                                // <CardsList data='allPosts' title="No Posts found" />
                                 <CardsList data={allPosts} title="No Posts found" />
                             )}
 

@@ -20,7 +20,7 @@ export default function CreatePost() {
         if (form.prompt && form.photo) {
             setLoading(true)
             try {
-                const res = await fetch("http://localhost:3030/api/v1/post", {
+                const res = await fetch("https://ai-image-genertor.onrender.com/api/v1/post", {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -54,7 +54,7 @@ export default function CreatePost() {
         if (form.prompt) {
             try {
                 setGeneratingImg(true)
-                const response = await fetch("http://localhost:3030/api/v1/dalle", {
+                const response = await fetch("https://ai-image-genertor.onrender.com/api/v1/dalle", {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ prompt: form.prompt })

@@ -15,7 +15,7 @@ export default function Home() {
     async function loadPosts() {
         setLoading(true)
         try {
-            const res = await fetch('http://localhost:3030/api/v1/post', {
+            const res = await fetch('https://ai-image-genertor.onrender.com/api/v1/post', {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json'
